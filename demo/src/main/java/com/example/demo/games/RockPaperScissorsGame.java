@@ -1,6 +1,6 @@
-package com.example.demo.gamesDto;
+package com.example.demo.games;
 
-public class RspGame {
+public class RockPaperScissorsGame {
     private String Player1;
     private String Player2;
 

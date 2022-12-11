@@ -1,6 +1,6 @@
-package com.example.demo.gamesDto;
+package com.example.demo.games;
 
-public class PdcGame {
+public class PokemonDamageCalculatorGame {
     private String player1;
 
     public String getPlayer1() {

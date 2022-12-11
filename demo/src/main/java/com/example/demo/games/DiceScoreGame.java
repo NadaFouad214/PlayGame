@@ -1,4 +1,4 @@
-package com.example.demo.gamesDto;
+package com.example.demo.games;
 
 public class DiceScoreGame {
 

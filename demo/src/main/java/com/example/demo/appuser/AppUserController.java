@@ -1,9 +1,9 @@
 package com.example.demo.appuser;
 
-import com.example.demo.gamesDto.DiceScoreGame;
-import com.example.demo.gamesDto.DiscsGame;
-import com.example.demo.gamesDto.PdcGame;
-import com.example.demo.gamesDto.RspGame;
+import com.example.demo.games.DiceScoreGame;
+import com.example.demo.games.TowerOfHanoiGame;
+import com.example.demo.games.PokemonDamageCalculatorGame;
+import com.example.demo.games.RockPaperScissorsGame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,18 +18,18 @@ private final AppUserService appUserService;
     }
 
     @PostMapping(path="/discs")
-    public void game(@RequestBody DiscsGame discsGame) throws Exception {
-        appUserService.discs(discsGame);
+    public void game(@RequestBody TowerOfHanoiGame towerOfHanoiGame) throws Exception {
+        appUserService.TowerOfHanoi(towerOfHanoiGame);
     }
 
     @PostMapping(path="/rsp")
-    public void game(@RequestBody RspGame rspGame) throws Exception {
-        appUserService.RSP(rspGame);
+    public void game(@RequestBody RockPaperScissorsGame rockPaperScissorsGame) throws Exception {
+        appUserService.RockPaperScissors(rockPaperScissorsGame);
     }
 
     @PostMapping(path="/pcd")
-    public void game(@RequestBody PdcGame pdcGame) throws Exception {
-        appUserService.PDC(pdcGame);
+    public void game(@RequestBody PokemonDamageCalculatorGame pokemonDamageCalculatorGame) throws Exception {
+        appUserService.PokemonDamageCalc(pokemonDamageCalculatorGame);
     }
 
     @PostMapping(path="/dic")

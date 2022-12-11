@@ -1,12 +1,11 @@
 package com.example.demo.appuser;
 
-import com.example.demo.gamesDto.DiceScoreGame;
-import com.example.demo.gamesDto.DiscsGame;
-import com.example.demo.gamesDto.PdcGame;
-import com.example.demo.gamesDto.RspGame;
+import com.example.demo.games.DiceScoreGame;
+import com.example.demo.games.TowerOfHanoiGame;
+import com.example.demo.games.PokemonDamageCalculatorGame;
+import com.example.demo.games.RockPaperScissorsGame;
 import com.example.demo.registration.token.ConfirmationToken;
 import com.example.demo.registration.token.ConfirmationTokenService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,15 +21,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+
 public class AppUserService implements UserDetailsService {
 
 
     private final static String USER_NOT_FOUND_MSG ="user with email %s not found";
     @Autowired
-    private final AppUserRepository appUserRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ConfirmationTokenService confirmationTokenService;
+    private  AppUserRepository appUserRepository;
+    @Autowired
+    private  BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private  ConfirmationTokenService confirmationTokenService;
 
 
 
@@ -54,23 +55,15 @@ public class AppUserService implements UserDetailsService {
                 .encode(appUser.getPassword());
 
         appUser.setPassword(encodedPassword);
-
         appUserRepository.save(appUser);
-
-
         String token = UUID.randomUUID().toString();
-
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),
                 appUser
         );
-
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-
-//        TODO: SEND EMAIL
-
         return token;
     }
     public int enableAppUser(String email) {
@@ -90,29 +83,32 @@ public AppUser getAppUser() throws Exception {
    return user.get();
 }
 
-    public void discs(DiscsGame discsGame) throws Exception {
+    public int TowerOfHanoi(TowerOfHanoiGame towerOfHanoiGame) throws Exception {
         AppUser appUser=getAppUser();
 
         int result=0;
-        if (discsGame.getMove()==0) {
+        if (towerOfHanoiGame.getMove()==0) {
             result= 0;
         } else {
-           result= (int) (Math.pow(2,discsGame.getMove()) - 1);
+           result= (int) (Math.pow(2, towerOfHanoiGame.getMove()) - 1);
         }
-        appUser.setDiscs_score(result);
-        appUserRepository.save(appUser);
+
+          appUser.setDiscs_score(result);
+          appUserRepository.save(appUser);
+
+        return result;
     }
 
 
-    public void RSP(RspGame rspGame) throws Exception {
+    public String RockPaperScissors(RockPaperScissorsGame rockPaperScissorsGame) throws Exception {
 
         AppUser appUser=getAppUser();
         String result="";
 
-        if(rspGame.getPlayer1().equals("Rock")&& rspGame.getPlayer2().equals("Scissors")||rspGame.getPlayer1().equals("Scissors")&&  rspGame.getPlayer2().equals("Paper")||rspGame.getPlayer1().equals("Paper")&&  rspGame.getPlayer2().equals("Rock"))
+        if(rockPaperScissorsGame.getPlayer1().equals("Rock")&& rockPaperScissorsGame.getPlayer2().equals("Scissors")|| rockPaperScissorsGame.getPlayer1().equals("Scissors")&&  rockPaperScissorsGame.getPlayer2().equals("Paper")|| rockPaperScissorsGame.getPlayer1().equals("Paper")&&  rockPaperScissorsGame.getPlayer2().equals("Rock"))
         {
             result= "winner is p1";
-        } else if (rspGame.getPlayer2().equals("Rock")&&rspGame.getPlayer1().equals("Scissors")|| rspGame.getPlayer2().equals("Scissors")&& rspGame.getPlayer2().equals("Paper")|| rspGame.getPlayer2().equals("Paper")&& rspGame.getPlayer1().equals("Rock")) {
+        } else if (rockPaperScissorsGame.getPlayer2().equals("Rock")&& rockPaperScissorsGame.getPlayer1().equals("Scissors")|| rockPaperScissorsGame.getPlayer2().equals("Scissors")&& rockPaperScissorsGame.getPlayer2().equals("Paper")|| rockPaperScissorsGame.getPlayer2().equals("Paper")&& rockPaperScissorsGame.getPlayer1().equals("Rock")) {
             result= "winner is p2";
         }
         else
@@ -121,35 +117,37 @@ public AppUser getAppUser() throws Exception {
         }
         appUser.setRsp_score(result);
         appUserRepository.save(appUser);
+        return result;
 
 
     }
 
-    public void PDC(PdcGame pdcGame) throws Exception {
+    public int PokemonDamageCalc(PokemonDamageCalculatorGame pokemonDamageCalculatorGame) throws Exception {
         AppUser appUser=getAppUser();
 
 
         int damage=0;
-        if (pdcGame.getPlayer1().equals("fire")&& pdcGame.getPlayer2().equals("water")||pdcGame.getPlayer1().equals("grass")&& pdcGame.getPlayer2().equals("fire"))
+        if (pokemonDamageCalculatorGame.getPlayer1().equals("fire")&& pokemonDamageCalculatorGame.getPlayer2().equals("water")|| pokemonDamageCalculatorGame.getPlayer1().equals("grass")&& pokemonDamageCalculatorGame.getPlayer2().equals("fire"))
         {
-            damage= (int) (50*(pdcGame.getAttack()/pdcGame.getDefense())*0.5);
+            damage= (int) (50*(pokemonDamageCalculatorGame.getAttack()/ pokemonDamageCalculatorGame.getDefense())*0.5);
         }
-        else if (pdcGame.getPlayer1().equals("electric")&& pdcGame.getPlayer2().equals("fire")||pdcGame.getPlayer2().equals("electric")&& pdcGame.getPlayer1().equals("fire")||pdcGame.getPlayer1().equals("grass")&& pdcGame.getPlayer2().equals("electric"))
+        else if (pokemonDamageCalculatorGame.getPlayer1().equals("electric")&& pokemonDamageCalculatorGame.getPlayer2().equals("fire")|| pokemonDamageCalculatorGame.getPlayer2().equals("electric")&& pokemonDamageCalculatorGame.getPlayer1().equals("fire")|| pokemonDamageCalculatorGame.getPlayer1().equals("grass")&& pokemonDamageCalculatorGame.getPlayer2().equals("electric"))
         {
-            damage= (int) (50*(pdcGame.getAttack()/pdcGame.getDefense())*1);
+            damage= (int) (50*(pokemonDamageCalculatorGame.getAttack()/ pokemonDamageCalculatorGame.getDefense())*1);
         }
-        else if (pdcGame.getPlayer1().equals("grass")&& pdcGame.getPlayer2().equals("water"))
+        else if (pokemonDamageCalculatorGame.getPlayer1().equals("grass")&& pokemonDamageCalculatorGame.getPlayer2().equals("water"))
         {
-            damage= (int) (50*(pdcGame.getAttack()/pdcGame.getDefense())*2);
+            damage= (int) (50*(pokemonDamageCalculatorGame.getAttack()/ pokemonDamageCalculatorGame.getDefense())*2);
         }
 
         appUser.setPdc_score(damage);
         appUserRepository.save(appUser);
 
 
+        return damage;
     }
 
-    public void DiceScore(DiceScoreGame diceScoreGame) throws Exception {
+    public int DiceScore(DiceScoreGame diceScoreGame) throws Exception {
         AppUser appUser=getAppUser();
         int score=0;
         int ones=0;
@@ -219,5 +217,6 @@ public AppUser getAppUser() throws Exception {
         }
         appUser.setDic_score(score);
         appUserRepository.save(appUser);
+        return score;
     }
 }

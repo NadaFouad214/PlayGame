@@ -40,6 +40,15 @@ public class AppUser implements UserDetails {
     private boolean enabled=false;
 
     private String rsp_score=null;
+
+    public AppUser(Long id, String firstname, String lastname, String email, String password) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.password = password;
+    }
+
     private int pdc_score=0;
     private int dic_score=0;
     private int discs_score=0;
@@ -87,6 +96,21 @@ public class AppUser implements UserDetails {
 
     }
 
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
